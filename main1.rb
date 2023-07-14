@@ -6,18 +6,35 @@ class Class
     @students = {}
   end
 
-  def get_csv
-    puts "csv"
-    # @file = File.open("student.csv","w")
-    # @file.puts("#{student_obj.name}, #{student_obj.address}")
-    # @file.close
+  # csv create
+  def create_csv
+    @file = File.new("student.csv", "w+")
+    @file.puts("Name, Address")
+    @students.each do |key, value|
+      @file.puts("#{value.name}, #{value.address}")
+    end
+    @file.close
   end
 
+  # Get csv
+  def get_csv
+    # puts "csv"
+    file = File.open("student.csv")
+    file.rewind
+    file.each { |line| puts line}
+    file.close
+  end
+
+  # Add Student
   def add_student student_obj
     @@student_count+=1
     @students[@@student_count] = student_obj
+    puts "-----------------------------------------"
+    puts "<<<<<<<<<< Student Added >>>>>>>>>>"
+    puts "-----------------------------------------" 
   end
 
+  # Get All Student
   def all_students
     puts "-----------------------------------------"
     puts "<<<<<<<<<< Student Data >>>>>>>>>>"
@@ -32,6 +49,7 @@ class Class
     puts "-----------------------------------------"
   end
 
+  # Delete Student
   def delete_student key
     if(@students.delete(key))
       puts "-----------------------------------------"
@@ -42,6 +60,7 @@ class Class
     end
   end
 
+  # Edit Student
   def edit_student key
     puts "Existing Details : #{@students[key].name} #{@students[key].address}"
     puts "Enter new name"
@@ -54,11 +73,10 @@ class Class
     puts "<<<<<<<<<< Student Updated >>>>>>>>>>"
     puts "-----------------------------------------"
   end
-
 end
 
 
-
+# Student Class
 class Student 
   attr_accessor :name, :address
 
@@ -68,11 +86,15 @@ class Student
   end
 end
 
+
+# Choice List
 def make_choice
-  puts "Make your choice : \n 1. Adding Student \n 2. Edit Student \n 3. Delete Student \n 4. All Students \n 0. Quit"
+  puts "Make your choice : \n 1. Adding Student \n 2. Edit Student \n 3. Delete Student \n 4. All Students \n 5. Print CSV \n 0. Quit"
   puts "-----------------------------------------"
 end
 
+
+# Selected Choice
 def selected_choice choice, cls
   case choice
   when 1
@@ -80,12 +102,7 @@ def selected_choice choice, cls
     name = gets.chomp
     puts "Enter Student address : "
     address = gets.chomp
-
-    cls.add_student Student.new(name, address)
-    puts "-----------------------------------------"
-    puts "<<<<<<<<<< Student Added >>>>>>>>>>"
-    puts "-----------------------------------------" 
-    
+    cls.add_student Student.new(name, address)    
   when 2
     puts "Enter Student Id"
     key = gets.to_i
@@ -96,15 +113,17 @@ def selected_choice choice, cls
     cls.delete_student key 
   when 4
     cls.all_students 
+  when 5
+    cls.create_csv
+    cls.get_csv
   else
     puts "Invalid Choice"
   end
 end
 
+
+
 # main 
-BEGIN{
-  File.new("student.csv", "w+")
-}
 cls = Class.new
 
 while true
@@ -115,8 +134,9 @@ while true
 end
 
 END{
-puts
-puts "Thank you for using"
+  puts "-----------------------------------------"
+  puts "<<<<<<<<<< Thank you for using >>>>>>>>>>"
+  puts "-----------------------------------------"
 }
 
 
